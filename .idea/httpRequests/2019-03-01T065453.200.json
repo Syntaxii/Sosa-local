@@ -1,0 +1,15 @@
+{
+  "message": "operation successful.",
+  "status": "ok",
+  "items": [
+    {
+      "model": "pages.stimsets",
+      "pk": "sts-fd87d050-600d-4367-88a4-38d50bc59d56",
+      "fields": {
+        "experimentId": "ex-e703ce37-ec2b-45f9-adb1-4fd5cb39c7ff",
+        "user": 2,
+        "stimsetname": ""
+      }
+    }
+  ]
+}

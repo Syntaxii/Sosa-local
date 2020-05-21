@@ -1,0 +1,61 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/view_experiment.css" %}">
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+    <div class="row justify-content-center">
+        <table id="stimTable">
+            <tr class="header">
+                <th>Stimuli</th>
+            </tr>
+        </table>
+        <div id="ThreeJSBoard"></div>
+        <script src="{% static "js/createBoard.js" %}"></script>
+    </div>
+    <input class="btn btn-primary" type="button" id="submitExperiment" value="Submit" onclick="onExperimentClick()"/>
+    <div id="links"></div>
+{#        This button needs to pull the information from the test to whatever we're doing with it#}
+
+    <input type="hidden" id="BoardRvalue">
+    <input type="hidden" id="BoardGvalue">
+    <input type="hidden" id="BoardBvalue">
+    <input type="hidden" id="BackgroundRvalue">
+    <input type="hidden" id="BackgroundGvalue">
+    <input type="hidden" id="BackgroundBvalue">
+
+    <p id="message"></p>
+
+    <script>
+        let stimsetID = {{ stimsetid }};
+        let boardID = {{ boardid }};
+
+        // Add stims from stimset to table
+        {% for stimulus in stimuli %}
+            if (stimsetID === {{ stimulus.stimsetid_id }}) {
+                $("#stimTable").append("<tr><td><button class='btn' style='background-color:inherit;' onclick='stimToBoard(this, {{ stimulus.stimr }}, {{ stimulus.stimg }}, {{ stimulus.stimb }}, \"{{ stimulus.stimshape }}\")'>{{ stimulus.stimlabel }}</button></td></tr>");
+            }
+        {% endfor %}
+
+        // Set board colors to hidden inputs
+        {% for board in boards %}
+            if (boardID === {{ board.boardid }}) {
+                $("#BoardRvalue").val({{ board.boardr }});
+                $("#BoardGvalue").val({{ board.boardg }});
+                $("#BoardBvalue").val({{ board.boardb }});
+                $("#BackgroundRvalue").val({{ board.boardbackgroundr }});
+                $("#BackgroundGvalue").val({{ board.boardbackgroundg }});
+                $("#BackgroundBvalue").val({{ board.boardbackgroundb }});
+            }
+        {% endfor %}
+        // Change board colors based on hidden inputs
+        setBoardRGB();
+        setBackgroundRGB();
+    </script>
+    {% endif %}
+
+
+{% endblock %}

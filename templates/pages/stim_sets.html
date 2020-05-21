@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/stim_sets.css" %}">
+{% endblock %}
+
+{% block content %}
+    <table id="myTable" align="center" style="display: block; overflow-y: scroll">
+        <tr class="header">
+            <th>Your Stimulus Sets</th>
+        </tr>
+        <!--FILL IN THE TABLE WITH RESULTS FROM THE DATABASE-->
+        {% for stimset in stimsets %}
+            {% if stimset.user_id == user.id %}
+                <tr>
+                    <td><a href="edit/{{ stimset.stimsetid }}" class="btn">{{ stimset.stimsetname }}</a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="btn btn-primary" value="Create New Stimulus Set" id="create">
+    </form>
+    <script>
+        // Set the user id
+        $("#id_user").val({{ user.id }});
+    </script>
+{% endblock %}

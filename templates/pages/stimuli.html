@@ -1,0 +1,29 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/stim_sets.css" %}">
+{% endblock %}
+
+{% block content %}
+    <table id="myTable" align="center" style="display: block; overflow-y: scroll">
+        <tr class="header">
+            <th>Stims in the StimSet</th>
+        </tr>
+        <!--FILL IN THE TABLE WITH RESULTS FROM THE DATABASE-->
+        {% for stimulus in stimuli %}
+            {% if stimulus.stimsetid_id|slugify == request.path|slice:'15:' %}
+                <tr>
+                    <td><a href="edit_stimulus/{{ stimulus.stimid }}" class="btn">{{ stimulus.stimlabel }}</a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        <!--FILL IN THE TABLE WITH RESULTS FROM THE DATABASE-->
+    </table>
+    <a href="#" class="btn btn-primary" id="createNew">Create New Stimulus</a>
+
+    <script>
+        let stimsetID = "{{ request.path|slice:'15:' }}";
+        $("#createNew").attr("href", "create/" + stimsetID);
+    </script>
+{% endblock %}

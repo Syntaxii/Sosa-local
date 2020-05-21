@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DjangoModelDependency</ID>
+  <OriginalElement>#django-sosa</OriginalElement>
+  <nodes>
+    <node x="0.0" y="967.0">pages.models.Stims</node>
+    <node x="265.0" y="624.0">pages.models.Boards</node>
+    <node x="128.25" y="167.0">django.contrib.auth.models.Permission</node>
+    <node x="167.25" y="523.0">users.models.CustomUser</node>
+    <node x="94.75" y="0.0">django.contrib.contenttypes.models.ContentType</node>
+    <node x="39.0" y="712.0">pages.models.StimSets</node>
+    <node x="245.0" y="1044.0">pages.models.Experiment</node>
+    <node x="75.75" y="356.0">django.contrib.auth.models.Group</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="pages.models.Experiment" target="pages.models.Boards">
+      <point x="47.5" y="-47.5" />
+      <point x="0.0" y="146.5" />
+    </edge>
+    <edge source="pages.models.Experiment" target="pages.models.StimSets">
+      <point x="-47.5" y="-47.5" />
+      <point x="292.5" y="942.0" />
+      <point x="193.5" y="942.0" />
+      <point x="51.5" y="58.5" />
+    </edge>
+    <edge source="users.models.CustomUser" target="django.contrib.auth.models.Group">
+      <point x="-48.75" y="-25.5" />
+      <point x="216.0" y="498.0" />
+      <point x="198.25" y="498.0" />
+      <point x="0.0" y="58.5" />
+    </edge>
+    <edge source="pages.models.StimSets" target="users.models.CustomUser">
+      <point x="0.0" y="-58.5" />
+      <point x="142.0" y="599.0" />
+      <point x="216.0" y="599.0" />
+      <point x="-48.75" y="25.5" />
+    </edge>
+    <edge source="django.contrib.auth.models.Group" target="django.contrib.auth.models.Permission">
+      <point x="0.0" y="-58.5" />
+      <point x="198.25" y="331.0" />
+      <point x="196.5" y="331.0" />
+      <point x="-68.25" y="69.5" />
+    </edge>
+    <edge source="django.contrib.auth.models.Permission" target="django.contrib.contenttypes.models.ContentType">
+      <point x="0.0" y="-69.5" />
+      <point x="0.0" y="58.5" />
+    </edge>
+    <edge source="pages.models.Boards" target="users.models.CustomUser">
+      <point x="0.0" y="-146.5" />
+      <point x="387.5" y="599.0" />
+      <point x="313.5" y="599.0" />
+      <point x="48.75" y="25.5" />
+    </edge>
+    <edge source="users.models.CustomUser" target="django.contrib.auth.models.Permission">
+      <point x="48.75" y="-25.5" />
+      <point x="313.5" y="498.0" />
+      <point x="331.25" y="498.0" />
+      <point x="331.25" y="331.0" />
+      <point x="333.0" y="331.0" />
+      <point x="68.25" y="69.5" />
+    </edge>
+    <edge source="pages.models.Stims" target="pages.models.StimSets">
+      <point x="0.0" y="-124.5" />
+      <point x="-51.5" y="58.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="254.9999999999999" y="608.0" />
+  <SelectedNodes>
+    <node>django.contrib.auth.models.Group</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+</Diagram>
+

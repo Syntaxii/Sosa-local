@@ -1,0 +1,179 @@
+{% extends '_subject_base.html' %}
+
+{% load static %}
+
+{% block css %}
+
+    <meta content=’width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0′ name=’viewport’ />
+	<link rel="stylesheet" href="{% static "css/home.css" %}">
+
+    <!--suppress CssUnusedSymbol -->
+    <style>
+    /*
+        Fit the white background
+        It IS USED, ignore your IDE warning
+     */
+        .mx-auto{
+            width: fit-content;
+            height: fit-content;
+
+            padding: 24px;
+
+        }
+        #alertPanel{
+            margin: 15px;
+        }
+
+    .stim-li:hover {
+        cursor: pointer !important;
+        color:white;
+        background-color: #007aff;
+    }
+
+    #previewPane {
+        display: inline;
+        min-height: 35vh;
+        min-width: 35vw;
+        background-color: black;
+    }
+    #previewRenderArea{
+        height: 75%;
+        width: 75%;
+        float:right;
+    }
+
+    #stimlistPanel{
+            height: 100%;
+    }
+
+
+    #stimOrderPanel {
+            height:55vh;
+            max-width: 23%;
+        }
+
+    .sosa-config-list li:hover{
+        cursor: default;
+    }
+    .sosa-clickable-list-item:hover{
+        color: #f1f1f1;
+        background-color: #007aff;
+        cursor: pointer !important;
+    }
+    .sosa-inline {
+        display: inline;
+    }
+    .stim-li-used {
+        /*display: none;*/
+        background-color: #852897;
+        color: #f1f1f1;
+    }
+    .stim-li-used:hover{
+        cursor: not-allowed;
+    }
+    .sosa-list-view-panel {
+        display: inline-block;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        border-radius: 12px;
+        border: solid 1px;
+
+        margin: 8px;
+        min-height: fit-content;
+        max-height: 400px;
+        width: 100%;
+    }
+    #backButton{
+        float: left;
+        color: white;
+        width: 100px;
+    }
+    #finishExperimentButton,#revertCameraButton,#exportToCsvButton,#saveToDbButton{
+        color: white;
+        width: 200px;
+        text-align: center;
+
+    }
+    .sosa-centered-button-panel{
+        margin-left:auto;
+        margin-right: auto;
+        width: fit-content;
+
+    }
+
+    .sosa-wide-panel{
+        width: 100%;
+        height: fit-content;
+    }
+    .btn{
+        color: white;
+    }
+    #sosa-configuration-panel{
+        border: 1px solid;
+        border-color: #007aff;
+        clear: both;
+        margin: 12px;
+        min-height:fit-content;
+        min-width: 45vw;
+        padding:8px;
+        -webkit-border-radius: 100px;
+        -moz-border-radius: 100px;
+        border-radius: 100px;
+
+    }
+
+    </style>
+{% endblock %}
+
+
+<!--Fix bug where user could bypass login screen-->
+{% block content %}
+
+    <title>{% block title %}SOSA Presentation{% endblock title %}</title>
+            <span id="data" data-string={{ dataString }} />
+             <script type="text/javascript">
+             //Do stuff with dataString here.
+             let DATA_STRING = $('#data').attr('data-string');
+
+            </script>
+                 <div id="previewPane">
+                     <div id="previewRenderArea"></div>
+                 </div>
+            <div id="stimOrderPanel">
+                <div id="stimlistPanel" class="sosa-list-view-panel">
+                    <center>
+                        <h4>Stims</h4>
+                    </center>
+                    <ul id="stimlist" class=" sosa-config-list list-group">
+                        <!--li class="list-group-item">Test</li-->
+
+                    </ul>
+                </div>
+
+            </div>
+
+            <div id="sosa-configuration-panel">
+            <!--Widget should always come before the main logic. it also helps to add them last, to prevent null ui jqueries-->
+            <script type="text/javascript" src={% static "js/exPreviewWidget.js" %}></script>
+            <script type = "text/javascript" src = {% static "js/exPresentation.js" %} ></script>
+
+            <!--Be sure to use a button panel for any buttons in this sub-grouping-->
+                <div class="sosa-centered-button-panel">
+                    <a id='revertCameraButton' onclick="revertCamera()" class="btn btn-secondary home-button">Revert Camera</a>
+                    <a id='exportToCsvButton' onclick="exportToCsv()" class="btn btn-primary home-button">Export Results</a>
+                    <a id='finishExperimentButton' onclick="saveToDB()" class="btn btn-primary home-button">Finish Experiment</a>
+                </div>
+            </div>
+
+            </div>
+
+            <div id="alertPanel">
+            </div>
+
+
+
+
+{#    <a href="/view_results" class="btn btn-primary home-button">View Results</a>#}
+
+{%  endblock content %}

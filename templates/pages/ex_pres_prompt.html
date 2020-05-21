@@ -1,0 +1,42 @@
+{% extends '_subject_base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/home.css" %}">
+    <style></style>
+{% endblock %}
+
+<title>{% block title %}SOSA Prompt{% endblock title %}</title>
+
+{% block content %}
+    <!--Toggle lib -->
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <!-- load exId and userId -->
+    <span id="data" data-inv-id="{{ invId }}"></span>
+    <script type="text/javascript">
+        let data_pres_prompt_invId = $('#data').attr('data-inv-id');
+    </script>
+    <script type="text/javascript" src="../../static/js/exPresPrompt.js"></script>
+
+    <div class="text-center">
+        <h1>Confirmation</h1>
+        <p>Welcome to SOSA, please click the button below to confirm your participation in this study. Be aware, time tracking will start as soon as you click the button. </p>
+        <p>Please do not user your browser's back button, as it will close the experiment and you'll need to start over for your data to be valid! </p>
+        
+        <label for="testTakerNameInput">Your Name:</label>
+        <br>
+        <input id="testTakerNameInput" type="text" style="width:75%" />
+        <br>
+        <label style="font-size: 12px;" for="testTakerNameInput">(Leave blank for anonymous)</label>
+        <br><br>
+        <label for="experimentNameInput">Experiment Name: </label>
+        <br>
+        <input id="experimentNameInput" type="text" style="width:75%" />
+        <br><br>
+        <button id='exConfirmPrompt' onclick="handleUserConfirmsPrompt()" class="btn btn-primary">Confirm</button>
+    </div>
+
+    <div id="alertPanel"></div>
+
+{% endblock %}

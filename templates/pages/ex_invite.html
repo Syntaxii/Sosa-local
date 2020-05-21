@@ -1,0 +1,45 @@
+{% extends '_base.html' %}
+
+<title>{% block title %}Staging{% endblock %}</title>
+
+{% block style %}
+    <style>
+        #inviteArea {
+            min-width: 250px;
+            min-height: 250px;
+        }
+        #exBackButton{
+            display: inline;
+        }
+
+    </style>
+{% endblock style %}
+
+{% block content %}
+    <div id="data" data-user-id={{ user.id }} data-config-id={{ configId }}></div>
+    <script>
+        let data_invite_config_id = $('#data').attr('data-config-id');
+        let data_invite_user_id = $('#data').attr('data-user-id');
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <script type="text/javascript" src="../../static/js/exInvite.js"></script>
+    <center>
+        <h1>Staging</h1>
+        <h5>Enter email addressess in the box below, seperate multiple emails with a comma.</h5>
+        <label>
+            <textarea id="inviteArea" oninput="handleUserInput(getEventTarget(event))">
+
+            </textarea>
+        </label>
+        <h5><i>Don't forget to double check that you don't send to the wrong person!</i></h5>
+        <div id="buttonPanel">
+            <button id="exBackButton" class="btn btn-secondary" onclick="goBack()">Back</button>
+            <button id="exSendButton" class="btn btn-primary" onclick="handleSendExperiment()">Send Invites</button>
+        </div>
+    </center>
+
+{% endblock content %}
+z

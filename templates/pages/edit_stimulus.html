@@ -1,0 +1,282 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/create_stimulus.css" %}">
+    <!-- Add icon library -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <style>
+        /*
+        For some reason it is not loadeing the stylesheet
+        Casteel: Also not loading with me so I had to put mine here too.
+        TODO: Fix linking with stylesheets
+         */
+    #pageHeader{
+        margin-bottom: 25px;
+        font-size: 45px;
+    }
+
+        #orders{
+            width: 100px;
+        }
+
+    .orderButtons{
+        float:right;
+        height:100%
+    }
+
+    .upOrderButton{
+        margin-left: 25px;
+        margin-top:100%;
+        border-radius: 7px;
+        padding:5px;
+        width:30px;
+        height: 30px;
+    }
+
+    .downOrderButton{
+        margin-left: 25px;
+        margin-top: 100%;
+        border-radius: 7px;
+        padding:5px;
+        width:30px;
+        height: 30px;
+    }
+
+    .plsMinBtn{
+        border-radius:5px;
+        padding:5px;
+        margin-left: 10px;
+        margin-right: 10px;
+        width:70%;
+        float:right;
+    }
+
+    .minusWrapper{
+        /*
+        Why does changin this change the minus button.
+        It's the plsWrapper.
+        */
+        float: left;
+    }
+
+    #stimset_view{
+        min-width: 250px;
+    }
+    #ThreeJSPeg{
+        margin-top: 5px !important;
+    }
+
+    #buttonPanel{
+        margin-top: 35px;
+        margin-bottom: 25px;
+    }
+    #shapes{
+        min-width: 100px;
+    }
+
+    #sliderContainer{
+        float: right !important;
+        padding-right: 30px;
+        padding-top: 25px;
+
+    }
+    #saveButton{
+        color: white;
+        float: right;
+
+    }
+    #backButton{
+        float: left;
+    }
+    .stim-li{
+        text-align: center;
+    }
+
+    .stim-li:hover {
+        /*
+        Defines style for stims on the stim list on hover
+         */
+        color: #852897;
+        cursor: pointer;
+
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static "css/create_stimulus.css" %}">
+    <!-- load data variables -->
+    <!-- load data variables -->
+    <span id="data" data-editstims-userId={{ userId }} data-editstims-exId={{ exId }} ></span>
+    <script type="text/javascript">
+        //Load variables from context
+        let data = $('#data');
+        let data_editstims_userId = $(data).attr('data-editstims-userId');
+        let data_editstims_exId = $(data).attr('data-editstims-exId');
+
+        //
+        enableToolTips();
+
+        function enableToolTips(){
+            $(document).ready(function(){
+              $('[data-toggle="tooltip"]').tooltip();
+            });
+        }
+        function handleLabelChanged(input){
+            //This is quite the line aint  ittttttttt
+            //alert(`new val:${$(input).val()}`) //uncomment for annoying
+            updateStimLabel($(input).val());
+
+        }
+
+        function onStimClicked(event){
+            clicked = getEventTarget(event);
+
+           unSelectAllStims();
+           selectStim($(clicked).attr('data-index'));
+
+        }
+
+    </script>
+
+    <div class="row justify-content-center">
+        <!-- Made this col 11 to increase width, my guess is that this is probably not how they should have
+        beendoing it. -->
+        <div class="col-11" style="padding-bottom: 50px;">
+            <center>
+                <h1 id="pageHeader" class="text-center">Edit Stimset</h1>
+            </center>
+            <div id="ThreeJSPeg"></div>
+            <script src="{% static "js/createStimulus.js" %}"></script>
+            <div class="stimSelect">
+                <p>Need a better look? Simply interact with the scene above! You may zoom in/out by using the mouse wheel.</p>
+                <label> Shape <br/>
+                    <select id="shapes">
+                        <option>Cylinder</option>
+                        <option>Cone</option>
+                        <option>Cube</option>
+                    </select>
+                </label>
+            </div>
+
+            <!-- This should FOLLOW create-stimulus it has dependent functions -->
+            <script type="text/javascript" src={% static "js/edit_stimset.js" %}> </script>
+{#            <input type="text" class="form-control" id="stimulus_name" placeholder="Stimulus Name" oninput= "setNewLabel(this )">#}
+{#                <button onclick="displayColorSliderLabel()" type="button" class="btn btn-secondary btn-shadow" id="labelBtn">Label</button>#}
+{#                <button onclick="displayColorSliderStimulus()" type="button" class="btn btn-secondary btn-shadow bg-primary" id="pegBtn">Peg</button>#}
+
+
+            <!-- Container to hold stim list and value sliders to achieve a side-by-side layout -->
+            <div id="listAndSliderContainer" >
+                <!-- You have to use float to create the dual effect, not just two divs! -->
+                <div style="float: left !important;" id="stimset_view">
+                    <h4 class="text-center">Your Stims</h4>
+
+                    <button onClick = "addNewStim()" type = "button" class = "btn btn-primary btn-shadow" style="width: 119px; margin: 10px"> New Stim </button>
+                    <button onClick = "removeStim()" type = "button" class = "btn btn-primary btn-shadow" style="width: 119px; margin: 10px">Remove Stim</button>
+
+                    <div class="orderButtons">
+                    <div id="stimUpBtn" data-toggle="tooltip" title="Move Stim Up" class="upOrderButton btn-primary"><center>
+                       <i  class="fas fa-angle-up"></i>
+                    </center> </div>
+                    <div id="stimDnBtn" data-toggle="tooltip" title="Move Stim Down" class="downOrderButton btn-primary"><center>
+                        <i  class="fas fa-angle-down"></i>
+                    </center> </div>
+                    </div>
+                    <!--What happens if this list grows too big?-->
+                    <div id="stimset_view_list_wrapper"
+                         style="overflow: scroll; overflow-x: hidden; max-height: 20vh;">
+                        <!--Be careful not to confuse this with stimset_view, stimlist is the actual ul element-->
+                        <ul id="stimlist" onclick="onStimClicked(event)" class="list-group">
+                            <!-- Only use li in this case -->
+
+                        </ul>
+
+                    </div>
+
+                </div>
+                <div id="sliderContainer">
+                    <div id="sliderContainerHeader">
+                        <center>Set Stim Color:</center>
+                    </div>
+                    <div id="displaySliderStimulus" class="pt-3" style="width: 250px; display: block;">
+                        <label> Red (<span id="sR"></span>) <br/>
+                            <input type="range" min="0" max="255" value="{{ 150 }}" class="slider mb-3" id="RvalueStim" onchange = "updateStimRGB()">
+                        </label>
+                        <label> Green (<span id="sG"></span>) <br/>
+                            <input type="range" min="0" max="255" value="{{ 0 }}" class="slider mb-3" id="GvalueStim" onchange = "updateStimRGB()">
+                        </label>
+                        <label> Blue (<span id="sB"></span>) <br/>
+                            <input type="range" min="0" max="255" value="{{ 0 }}" class="slider mb-4" id="BvalueStim" onchange = "updateStimRGB()">
+                        </label>
+                    </div>
+                  <div id="displaySliderLabel" class="pt-3" style="width: 250px; display: none;">
+                      <label> Red (<span id="lR"></span>) <br/>
+                        <input type="range" min="0" max="255" value="{{ 0 }}" class="slider mb-3" id="lRvalueStim" onchange = "updateStimLabelRGB()">
+                      </label>
+                      <label> Green (<span id="lG"></span>) <br/>
+                        <input type="range" min="0" max="255" value="{{ 0 }}" class="slider mb-3" id="lGvalueStim" onchange = "updateStimLabelRGB()">
+                      </label>
+                      <label> Blue (<span id="lB"></span>) <br/>
+                          <input type="range" min="0" max="255" value="{{ 0 }}" class="slider mb-4" id="lBvalueStim" onchange = "updateStimLabelRGB()">
+                      </label>
+                  </div>
+                </div>
+            </div>
+            <!-- Order list -->
+            <div style="text-align: center; max-width: 250px;" id="orderlist_view">
+                <label>Select Order</label><br>
+                <div class="minusWrapper">
+                    <div data-toggle="tooltip" title="Remove Order" id="orderMinusBtn" class="btn-primary plsMinBtn">
+                        <i class="fas fa-minus"></i>
+                    </div>
+                </div>
+                <select onchange="handleChangeOrder(
+                    getEventTarget(event)
+                )" id="orders">
+                </select>
+                <div class="orderButtons">
+                <div data-toggle="tooltip" title="Add Order" id="orderPlusBtn" class="btn-primary plsMinBtn">
+                    <i class="fas fa-plus"></i>
+                </div>
+                </div>
+            </div>
+            <div id="labelForm">
+                <label>
+                    Stim Label: <br/>
+                    <input id="labelEntry" type="text"
+                           onchange="handleLabelChanged(getEventTarget(event))"
+                           onkeypress="this.onchange(event)"
+                           oninput="this.onchange(event)"
+                           onpaste="this.onchange(event)"
+                        >
+                </label>
+
+            </div>
+                  <!-- Update routing on back button -->
+                        <div id="buttonPanel">
+                            <a id="backButton" href="{% url 'edit-experiment-landing' exId=exId  %}" class="btn btn-secondary">Back</a>
+                            <a id="saveButton" onclick="saveStims()" class="btn btn-primary">Save</a>
+                        </div>
+                        <div id="alertPanel">
+                            <div role="alert" class="alert alert-info">Loading...</div>
+                        </div>
+
+
+                        <script src="{% static "js/RGB_stim_generator.js" %}"></script>
+                    <script>
+                        // Set initial stim shape
+                        //$("#shapes").val("{}");
+                        //may need to pull this dynamically in onAttach
+                        //$("#id_stimshape").val('Cylinder');
+
+                        // Set default color of ThreeJS features
+                        setPegRGB();
+                        setLabelRGB();
+
+
+                    </script>
+        </div>
+    </div>
+{% endblock %}

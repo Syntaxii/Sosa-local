@@ -1,0 +1,67 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/create_stimulus.css" %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <div id="ThreeJSPeg"></div>
+            <script src="{% static "js/createStimulus.js" %}"></script>
+             <p>Need a better look? Simply interact with the scene above!</p>
+            <p>You may zoom in/out by using the mouse wheel!</p>
+            <div class="stimSelect">
+                <select id="shapes">
+                    <option>Cylinder</option>
+                    <option>Cone</option>
+                    <option>Cube</option>
+                </select>
+            </div>
+             <!-- Update routing on back button -->
+            <a href="{% url 'edit-experiment-landing' exId=exId  %}" class="btn btn-primary">Back</a>
+
+{#            <input type="text" class="form-control" id="stimulus_name" placeholder="Stimulus Name" oninput= "setNewLabel(this )">#}
+
+{#                <button onclick="displayColorSliderLabel()" type="button" class="btn btn-secondary btn-shadow" id="labelBtn">Label</button>#}
+{#                <button onclick="displayColorSliderStimulus()" type="button" class="btn btn-secondary btn-shadow bg-primary" id="pegBtn">Peg</button>#}
+
+                        <div id="displayValueLabelStimulus" class="text-center" style="display: none;">
+                            Value: (<span id="lR"></span>, <span id="lG"></span>, <span id="lB"></span>)
+                          </div>
+                          <div id="displayValuePeg" class="text-center" style="display: block;">
+                            Value: (<span id="sR"></span>, <span id="sG"></span>, <span id="sB"></span>)
+                          </div>
+
+                        <div id="displaySliderStimulus" class="pt-3" style="width: 250px; display: block;">
+                        <input type="range" min="0" max="255" value="0" class="slider mb-3" id="RvalueStim" onchange = "setPegRGB()">
+                        <input type="range" min="0" max="255" value="0" class="slider mb-3" id="GvalueStim" onchange = "setPegRGB()">
+                        <input type="range" min="0" max="255" value="0" class="slider mb-4" id="BvalueStim" onchange = "setPegRGB()">
+                      </div>
+                      <div id="displaySliderLabel" class="pt-3" style="width: 250px; display: none;">
+                        <input type="range" min="0" max="255" value="0" class="slider mb-3" id="lRvalueStim" onchange = "setLabelRGB()">
+                        <input type="range" min="0" max="255" value="0" class="slider mb-3" id="lGvalueStim" onchange = "setLabelRGB()">
+                        <input type="range" min="0" max="255" value="0" class="slider mb-4" id="lBvalueStim" onchange = "setLabelRGB()">
+                      </div>
+
+
+                        <p id="message"></p>
+
+                        <script src="{% static "js/RGB_stim_generator.js" %}"></script>
+                    <script>
+                        // Set initial stim shape
+                        $("#id_stimshape").val($("#shapes").val());
+
+                        // Set stimset ID
+                        let path = "{{ request.path }}";
+                        let stimsetID = path.slice(22);
+                        $("#id_stimsetid").val(stimsetID);
+
+                        $("#shapes").click(function() {
+                           $("#id_stimshape").val($("#shapes").val());
+                        });
+                    </script>
+        </div>
+    </div>
+{% endblock %}

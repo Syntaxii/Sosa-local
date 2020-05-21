@@ -1,0 +1,75 @@
+{% extends '_subject_base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/home.css" %}">
+    <style>
+
+    </style>
+{% endblock %}
+
+<title>{% block title %}Presentation End{% endblock title %}</title>
+
+{% block content %}
+    <!--Toggle lib -->
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <!-- load exId and userId -->
+
+
+    <div class="text-center">
+        <h1 id="endHeader">End of Test</h1>
+        <p>Thank you for your participation, you had a test time of <span id="exTimeDisplay"></span> the researcher should get notified soon! </p>
+        <p>You may now close this window.</p>
+    </div>
+
+    <script type="text/javascript">
+        let data = '{{ dataString }}';
+        let tracking = safeJsonParse(
+            base64_url_decode(data)
+        ).tracking;
+        if(!tracking.endTime){
+            $('p').remove();
+            $('button').remove();
+            $('#endHeader').text('Please do not go to this page manually!');
+        }
+        else{
+            //Calculate time string.~m/iofb
+            let totalTime = tracking.endTime - tracking.startTime;
+
+            let secs = totalTime / 1000;
+            let mins = Math.floor(secs/60);
+            let hours = Math.floor(mins/60);
+            let remSecs = Math.floor(secs % 60);
+            let remMins = Math.floor(mins % 60);
+
+            let timeString = hours === 0 ?
+                `${remMins} mins : ${remSecs} secs` : `${hours} hours : ${remMins} mins : ${remSecs} secs`;
+            $('#exTimeDisplay').text(timeString);
+
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+    <script src="{% static "js/exPresPrompt.js" %}"></script>
+
+    <!--form method="post" action="">
+        { csrf_token }
+        {form }
+        <input type="submit" class="btn btn-primary" value="Save" id="create">
+    </form-->
+    <!-- Update routing on back button -->
+    <div id="alertPanel">
+    </div>
+
+
+{% endblock %}

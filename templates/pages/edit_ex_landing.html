@@ -1,0 +1,186 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static "css/home.css" %}">
+    <style>
+        #nameUpdateButton{
+            color: white;
+            margin: 10px;
+        }
+
+        #exLoadWidgetBg{
+            display: none;
+            position: absolute;
+            width: 100vw;
+            height: 150vh;
+            top: 0;
+            left: 0;
+            z-index: 30;
+            background-color: rgba(0,0,0,0.4);
+        }
+        #exLoadWidget {
+            position: absolute;
+            top: 25%;
+            left: 40%;
+            width: 550px;
+            min-height: 450px ;
+            max-height: 600px;
+            z-index: 31;
+            background-color: #852897;
+
+            border-radius: 10px;
+
+        }
+
+        #exLoadWidgetList{
+            min-height: 250px;
+            max-height: 450px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+
+            margin: 12px;
+
+        }
+
+        #exLoadWidgetCloseButton{
+            font-size: 28px;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+
+            margin:16px;
+        }
+        #exLoadWidgetCloseButton:hover{
+            color: red;
+        }
+
+        #exLoadWidgetButtonPanel{
+            margin: 8px;
+        }
+
+        #exLoadWidgetBackButton{
+            width: 150px;
+            margin: 4px;
+        }
+        #exLoadWidgetRefreshButton{
+            width: 150px;
+            margin: 4px;
+        }
+
+         .list-group-item:hover {
+            cursor: pointer !important;
+             color: white;
+             background: #007aff;
+        }
+
+        #exLoadWidgetHeader{
+            margin-top: 4px;
+            margin-bottom:2px;
+            font-size: 32px;
+            text-align: center;
+            color: white;
+
+            cursor: default !important;
+        }
+        #exLoadWidgetSearchBar{
+            margin-left: auto;
+            margin-right: auto;
+            width: 75%;
+
+            text-align: center;
+
+            margin-bottom: 16px;
+        }
+        .exLoadWidgetAlertPanel{
+            padding-top: 12px;
+            position: absolute;
+            bottom: 0;
+
+            width: 100%;
+
+            margin-left: auto;
+            margin-right: auto;
+
+
+        }
+        #exLoadWidgetSubHeader{
+            margin-top:0;
+            margin-bottom: 4px;
+            font-size: 16px;
+            text-align: center;
+            color: white;
+
+            cursor: default !important;
+        }
+    </style>
+{% endblock %}
+
+
+<!--Fix bug where user could bypass login screen-->
+{% block content %}
+{% if user.is_authenticated %}
+    <!-- This is how you do titles -->
+    <title>{% block title %}Edit Experiment{% endblock title %}</title>
+            <!-- Stage data fro javascript -->
+            <span id="data" data-ex-id={{ exId }}/>
+            <!--suppress JSUnusedLocalSymbols -->
+            <script type="text/javascript">
+            //Pull the url parameter into javascript
+                let data_ex_id_ex_landing = document.getElementById('data')
+                    .getAttribute('data-ex-id').replace('/','');
+            //Configure widget props
+            let USER_ID = {{ user.id }};
+            let SELECT_OPTION = 'template';
+            </script>
+            <script type="text/javascript" src={% static "js/edit_ex_landing.js" %} ></script>
+            <script type="text/javascript" src={% static "js/exLoadWidget.js" %}></script>
+
+            <img src="{% static 'images/Psychology_image.png' %}" class="img-fluid" alt="SOSA Logo" height="200" width="200" id="logo"/>
+            <h1>SOSA</h1>
+            <p>Simultaneous Object and Subjective Assessment</p>
+            <hr>
+            <p> Currently working on experiment:  <span id="exNameDisplay"></span></p>
+            <center>
+            <form onsubmit="updateNameAsync(event)">
+                <label> Change Name: <br/>
+                    <input id="exNameEntry" type="text" style="text-align: center;">
+                </label><br/>
+             <button id="nameUpdateButton" onclick="updateNameAsync(event)" class="btn btn-secondary">Update Name</button>
+            </form>
+            </center>
+            <!-- Update the routings to the new views -->
+            <a id='editBoardButton' href="/experiment/board/edit/{{ exId }}" class="btn btn-primary home-button">Edit Board</a>
+            <a id='editStimsetButton' href="/experiment/stimset/edit/{{ exId }}" class="btn btn-primary home-button">Edit Stimset </a>
+            <a id='deleteExperimentButton' onclick="handleUserRemovesExperiment()" class="btn btn-danger home-button">Delete Experiment</a>
+            <a id='loadTemplateButton' onclick="toggleWidgetIsShowing()" class="btn btn-warning home-button">Load Template</a>
+            <a id='stageExperimentButton' href="/experiment/setup/{{  exId }}" class="btn btn-primary home-button">Stage Experiment</a>
+{#    <a href="/view_results" class="btn btn-primary home-button">View Results</a>#}
+            <div id="exLoadWidgetBg" >
+                <div id="exLoadWidget">
+                    <h1 id="exLoadWidgetCloseButton" onclick="toggleWidgetIsShowing()">X</h1>
+                    <h1 id="exLoadWidgetHeader">Your Experiments</h1>
+                    <h4 id="exLoadWidgetSubHeader">Select an experiment...</h4>
+                    <ul id="exLoadWidgetList" class="list-group">
+                    </ul>
+                    <div id="exLoadWidgetSearchPanel">
+                        <input id="exLoadWidgetSearchBar" type="text" placeholder="Type here to search!" oninput="handleUserSearch(getEventTarget(event))" class="form-control">
+                    </div>
+                    <div id="exLoadWidgetButtonPanel">
+                         <button id="exLoadWidgetRefreshButton" onclick="handleUserRequestsRefresh()" class="btn btn-success">Refresh</button>
+                    </div>
+                    <div class="exLoadWidgetAlertPanel" id="exLoadWidgetAlertPanel">
+                        <div class="alert alert-info " role="alert">Loading your experiments...</div>
+                    </div>
+                </div>
+            </div>
+    {% else %}
+    <img src="{% static 'images/Psychology_image.png' %}" class="img-fluid" alt="SOSA Logo" height="200" width="200" id="logo"/>
+    <h1>SOSA</h1>
+    <p>Simultaneous Object and Subjective Assessment</p>
+    <hr>
+    <p> You are not logged in!</p>
+{%  endif %}
+{%  endblock content %}
+

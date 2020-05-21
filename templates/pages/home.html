@@ -1,0 +1,188 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static "css/home.css" %}">
+    <style>
+        #createExButton,#loadExButton,#getDbButton {
+            color: white;
+        }
+        
+        #alertPanel{
+            margin: 15px;
+        }
+
+        #exLoadWidgetBg{
+            display: none;
+            position: absolute;
+            width: 100vw;
+            height: 150vh;
+            top: 0;
+            left: 0;
+            z-index: 30;
+            background-color: rgba(0,0,0,0.4);
+        }
+        #exLoadWidget {
+            position: absolute;
+            top: 25%;
+            left: 40%;
+            width: 550px;
+            min-height: 450px ;
+            max-height: 600px;
+            z-index: 31;
+            background-color: #852897;
+
+            border-radius: 10px;
+
+        }
+        #exLoadWidgetList{
+            min-height: 250px;
+            max-height: 450px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+
+            margin: 12px;
+
+        }
+        #exLoadWidgetCloseButton{
+            font-size: 28px;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+
+            margin:16px;
+        }
+        #exLoadWidgetCloseButton:hover{
+            color: red;
+        }
+        #exLoadWidgetButtonPanel{
+            margin: 8px;
+        }
+        #exLoadWidgetBackButton{
+            width: 150px;
+            margin: 4px;
+        }
+        #exLoadWidgetRefreshButton{
+            width: 150px;
+            margin: 4px;
+        }
+        .list-group-item:hover {
+            cursor: pointer !important;
+            color: white;
+            background: #007aff;
+        }
+        #exLoadWidgetHeader{
+            margin-top: 4px;
+            margin-bottom:2px;
+            font-size: 32px;
+            text-align: center;
+            color: white;
+
+            cursor: default !important;
+        }
+        #exLoadWidgetSearchBar{
+            margin-left: auto;
+            margin-right: auto;
+            width: 75%;
+
+            text-align: center;
+
+            margin-bottom: 16px;
+        }
+        .exLoadWidgetAlertPanel{
+            padding-top: 12px;
+            position: absolute;
+            bottom: 0;
+
+            width: 100%;
+
+            margin-left: auto;
+            margin-right: auto;
+
+
+        }
+        #exLoadWidgetSubHeader{
+            margin-top:0;
+            margin-bottom: 4px;
+            font-size: 16px;
+            text-align: center;
+            color: white;
+
+            cursor: default !important;
+        }
+    </style>
+{% endblock %}
+
+
+<!--Fix bug where user could bypass login screen-->
+{% block content %}
+{% if user.is_authenticated %}
+    <title>{% block title %}Home{% endblock title %}</title>
+
+            <div id="loaderDiv" class="loader loader-default" data-text="Downloading results..."></div>
+
+            <div id="dialogPane"></div>
+            <span id="data" data-user={{ user.id }}/>
+
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+            <script type="text/javascript">
+
+            let data_user_id = document.getElementById('data').getAttribute('data-user')
+                    .replace('/','');
+            //Configure widget props
+            let USER_ID = data_user_id;
+            let SELECT_OPTION = 'load';
+            </script>
+            <script type = "text/javascript" src = {% static "js/home.js" %} ></script>
+
+            <img src="{% static 'images/Psychology_image.png' %}" class="img-fluid" alt="SOSA Logo" height="200" width="200" id="logo"/>
+            <h1>SOSA</h1>
+            <p>Simultaneous Object and Subjective Assessment</p>
+            <hr>
+            <p> Welcome, you are logged in as {{ user.email }}!</p>
+            <a id="createExButton" onclick="beginCreateExperimentProcess()" class="btn btn-primary home-button">Create Experiment</a>
+            <a id="loadExButton" onclick="toggleWidgetIsShowing()" class="btn btn-primary home-button">Load Experiment</a>
+            <br><br>
+            <label for="testTakerNameInput">Test Taker Name:</label>
+            <br>
+            <input id="testTakerNameInput" type="text" style="width:75%" />
+            <br>
+            <label for="experimentNameInput">Experiment Name: </label>
+            <br>
+            <input id="experimentNameInput" type="text" style="width:75%" />
+            <br>
+            <a id="getDbButton" onclick="getDB()" class="btn btn-primary home-button">Export Results</a>
+            <div id="exLoadWidgetBg" >
+                <div id="exLoadWidget">
+                    <h1 id="exLoadWidgetCloseButton" onclick="toggleWidgetIsShowing()">X</h1>
+                    <h1 id="exLoadWidgetHeader">Your Experiments</h1>
+                    <h4 id="exLoadWidgetSubHeader">Select an experiment...</h4>
+                    <ul id="exLoadWidgetList" class="list-group">
+                    </ul>
+                    <div id="exLoadWidgetSearchPanel">
+                        <input id="exLoadWidgetSearchBar" type="text" placeholder="Type here to search!" oninput="handleUserSearch(getEventTarget(event))" class="form-control">
+                    </div>
+                    <div id="exLoadWidgetButtonPanel">
+                         <button id="exLoadWidgetRefreshButton" onclick="handleUserRequestsRefresh()" class="btn btn-success">Refresh</button>
+                    </div>
+                    <div class="exLoadWidgetAlertPanel" id="exLoadWidgetAlertPanel">
+                        <div class="alert alert-info " role="alert">Loading your experiments...</div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript" src="{% static 'js/exLoadWidget.js' %}"></script>
+            <div id="alertPanel">
+
+            </div>
+{#    <a href="/view_results" class="btn btn-primary home-button">View Results</a>#}
+
+    {% else %}
+    <img src="{% static 'images/Psychology_image.png' %}" class="img-fluid" alt="SOSA Logo" height="200" width="200" id="logo"/>
+    <h1>SOSA</h1>
+    <p>Simultaneous Object and Subjective Assessment</p>
+    <hr>
+    <p> You are not logged in!</p>
+{%  endif %}
+{%  endblock content %}
+

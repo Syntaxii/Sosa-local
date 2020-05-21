@@ -1,0 +1,185 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/edit_board.css" %}">
+    <style>
+        #buttonPanel {
+            margin-bottom: 25px;
+            margin-top: 25px;
+        }
+        #backButton{
+            float: left;
+        }
+        #backButton:hover{
+            color : #f1f1f1;
+        }
+        #saveButton{
+            float:right;
+            color:white;
+        }
+        #saveButton:hover{
+            color: #f1f1f1;
+        }
+        #imgSelectButtonPanel{
+            padding-top: 15px;
+            display: none;
+        }
+        #imgSelectButtonPanel a{
+            color: white;
+        }
+        #imgPreview{
+            max-height: 300px !important;
+            max-width: 300px !important;
+        }
+    #imgInput{
+        display: none;
+    }
+
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!--Toggle lib -->
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <!-- load exId and userId -->
+    <span id="data" data-ex-id="{{ exId }}" data-user-id="{{ user.id }}"></span>
+    <script type="text/javascript">
+        let data_editboard_userId = $('#data').attr('data-user-id');
+        let data_editboard_exId = $('#data').attr('data-ex-id');
+    </script>
+
+
+    <div class="text-center">
+        <h1>Board Modification</h1>
+    </div>
+
+    <div id="ThreeJSBoard"></div>
+    <!--Link three JS Logic-->
+    <script src="{% static "js/createBoard.js" %}"></script>
+    <!-- load mainScript -->
+    <script src="{% static "js/edit_board.js" %}" type="text/javascript" ></script>
+    <p>Need a better look? Simply interact with the scene above!</p>
+
+    <div class="row">
+
+        <div class="flex-column m-auto align-self-end text-center">
+            <button onclick="displayColorSliderBoard()" value="board" class="btn btn-secondary btn-shadow bg-primary"
+                    id="boardBtn">Board Color
+            </button>
+            <button onclick="displayColorSliderBackground()" value="background" class="btn btn-secondary btn-shadow"
+                    id="backgroundBtn">Background Color
+            </button>
+            <!-- Why would this be hidden -->
+            <button onclick="displayColorSliderCover()" hidden="hidden" value="cover" class="btn btn-secondary btn-shadow"
+                    id="coverBtn">Cover
+            </button>
+
+            <div id="displayValueBoard" class="pt-3 text-center" style="display: block;">
+                <!-- Values used to go here -->
+            </div>
+            <div id="displayValueBackground" class="pt-3 text-center" style="display: none;">
+
+            </div>
+            <div id="displayValueCover" class="pt-3 text-center" style="display: none;">
+                Value: (<span id="Rcv"></span>, <span id="Gcv"></span>, <span id="Bcv"></span>)
+            </div>
+        </div>
+    </div>
+    <div>
+        <div id="displaySliderBoard" style="display: block;">
+            <div id="imagePanel">
+                <!--By default just has the toggle switch -->
+                <label>
+                    Use Custom Image <br/>
+                    <input id="imageToggle" onchange="handleToggleImgSelect(getEventTarget(event))" type="checkbox" data-toggle="toggle">
+                </label>
+                <!-- todo: move the styles up once you finish -->
+                <div id="imageSelectPanel" style="width: 300px; height: 300px; border: black 1px solid; margin-left: auto; margin-right: auto; display: none;">
+                    <img id="imgPreview"  alt="No Image Loaded..." src="{%  static "img/Psychology_image.png" %}"/>
+                    <input id="imgInput" onchange="loadInputData(this)" accept="image/png, image/jpeg" type="file"/>
+                </div>
+                <div id="imgSelectButtonPanel" style="margin-left: auto; margin-right: auto;">
+                        <p>Images can be no larger than 80KB!</p>
+                        <a id='chooseImageButton' class="btn btn-secondary">Choose Image</a>
+                        <a id='uploadImageButton' class="btn btn-primary">Apply Image</a>
+                </div>
+
+            </div>
+            <div id="boardColorSliders">
+                    <!--I believe this is what they show when the user clicks Board color-->
+                <label> Red:(<span id="Rbv"></span>)
+                     <input type="range" min="0" max="255" value="{{ 255 }}" class="slider mb-3" id="BoardRvalue"
+                       onchange="handleChangeBoardRGB()">
+                </label>
+                <br/>
+                <label> Green: (<span id="Gbv"></span>)
+                    <input type="range" min="0" max="255" value="{{ 255 }}" class="slider mb-3" id="BoardGvalue"
+                       onchange="handleChangeBoardRGB()">
+                </label>
+                <br/>
+                <label> Blue: (<span id="Bbv"></span>)
+                   <input type="range" min="0" max="255" value="{{ 250  }}" class="slider mb-4" id="BoardBvalue"
+                       onchange="handleChangeBoardRGB()">
+                </label>
+            </div>
+
+
+        </div>
+
+        <div id="displaySliderBackground" style="display: none;">
+
+             <label> Red: (<span id="Rbgv"></span>)
+                <input type="range" min="0" max="255" value="{{ 0 }}" class="slider mb-3"
+                   id="BackgroundRvalue" onchange="handleChangeBoardBgRGB()">
+             </label>
+            <br/>
+            <label> Green: (<span id="Gbgv"></span>)
+            <input type="range" min="0" max="255" value="{{ 0 }}" class="slider mb-3"
+                   id="BackgroundGvalue" onchange="handleChangeBoardBgRGB()">
+            </label>
+            <br/>
+            <label> Blue: (<span id="Bbgv"></span>)
+            <input type="range" min="0" max="255" value="{{ 0 }}" class="slider mb-4"
+                   id="BackgroundBvalue" onchange="handleChangeBoardBgRGB()">
+            </label>
+        </div>
+
+        <div id="displaySliderCover" style="display: none;">
+            <input type="range" min="0" max="255" value="0" class="slider mb-3" id="CoverRvalue"
+                   onchange="setBoardCoverRGB()">
+            <input type="range" min="0" max="255" value="0" class="slider mb-3" id="CoverGvalue"
+                   onchange="setBoardCoverRGB()">
+            <input type="range" min="0" max="255" value="255" class="slider mb-4" id="CoverBvalue"
+                   onchange="setBoardCoverRGB()">
+        </div>
+
+    </div>
+
+    <script src="{% static "js/rbgValueGenerator.js" %}"></script>
+
+    <!--form method="post" action="">
+        { csrf_token }
+        {form }
+        <input type="submit" class="btn btn-primary" value="Save" id="create">
+    </form-->
+    <!-- Update routing on back button -->
+    <div id="buttonPanel">
+        <a id='backButton' href="{% url 'edit-experiment-landing' exId=exId  %}" class="btn btn-primary">Back</a>
+        <a id='saveButton' class="btn btn-primary" onclick="saveBoardAsync()">Save</a>
+    </div>
+    <div id="alertPanel">
+        <div class="alert alert-info" role="alert">Loading...</div>
+    </div>
+
+    <script>
+        // Set the default color of the ThreeJS features to their specified values
+        setBoardRGB(true);
+        setBackgroundRGB(true);
+
+
+    </script>
+
+{% endblock %}

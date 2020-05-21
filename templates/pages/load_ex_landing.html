@@ -1,0 +1,50 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static "css/home.css" %}">
+    <style>
+        #nameUpdateButton{
+            color: white;
+            margin: 10px;
+        }
+    </style>
+{% endblock %}
+
+
+<!--Fix bug where user could bypass login screen-->
+{% block content %}
+{% if user.is_authenticated %}
+    <!-- This is how you do titles -->
+    <title>{% block title %}Experiment{% endblock title %}</title>
+            <!-- Stage data fro javascript -->
+            <span id="data" data-ex-id={{ exId }}/>
+            <!--suppress JSUnusedLocalSymbols -->
+
+    <script type="text/javascript">
+            //Pull the url parameter into javascript
+                let data_ex_id = document.getElementById('data')
+                    .getAttribute('data-ex-id').replace('/','');
+    </script>
+    <script type="text/javascript" src={% static "js/load_ex_landing.js" %} ></script>
+
+    <img src="{% static 'images/Psychology_image.png' %}" class="img-fluid" alt="SOSA Logo" height="200" width="200" id="logo"/>
+    <h1>SOSA</h1>
+    <p>Simultaneous Object and Subjective Assessment</p>
+    <hr>
+    <p> Currently working on experiment:  <span id="exNameDisplay"></span></p>
+    <!-- Update the routings to the new views -->
+    <a id='editExperimentButton' href="/experiment/edit/{{ exId }}" class="btn btn-primary home-button">Edit Experiment</a>
+    <a id='stageExperimentButton' href="/experiment/setup/{{  exId }}" class="btn btn-primary home-button">Stage Experiment </a>
+{#    <a href="/view_results" class="btn btn-primary home-button">View Results</a>#}
+
+{% else %}
+    <img src="{% static 'images/Psychology_image.png' %}" class="img-fluid" alt="SOSA Logo" height="200" width="200" id="logo"/>
+    <h1>SOSA</h1>
+    <p>Simultaneous Object and Subjective Assessment</p>
+    <hr>
+    <p> You are not logged in!</p>
+{%  endif %}
+{%  endblock content %}
+

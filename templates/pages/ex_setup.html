@@ -1,0 +1,456 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block css %}
+
+    <meta content=’width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0′ name=’viewport’ />
+	<link rel="stylesheet" href="{% static "css/home.css" %}">
+
+    <!--suppress CssUnusedSymbol -->
+    <style>
+    /*
+        Fit the white background
+        It IS USED, ignore your IDE warning
+     */
+        .mx-auto{
+            width: fit-content;
+            height: fit-content;
+
+            padding: 24px;
+
+        }
+        #alertPanel{
+            margin: 15px;
+        }
+
+    #previewPane {
+        display: inline;
+        min-height: 35vh;
+        min-width: 35vw;
+
+        background-color: black;
+    }
+    #previewRenderArea{
+        height: 75%;
+        width: 75%;
+        float:right;
+    }
+
+    #stimlistPanel{
+            height: 70%;
+    }
+
+    #orderlistPanel {
+            height: 25%;
+    }
+
+    #stimOrderPanel {
+            height:55vh;
+            max-width: 23%;
+        }
+
+    .sosa-config-list li:hover{
+        cursor: default;
+    }
+    .sosa-clickable-list-item:hover{
+        color: #f1f1f1;
+        background-color: #007aff;
+        cursor: pointer !important;
+    }
+    .sosa-inline {
+        display: inline;
+    }
+    .sosa-list-view-panel {
+        display: inline-block;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        border-radius: 12px;
+        border: solid 1px;
+
+        margin: 8px;
+        min-height: fit-content;
+        max-height: 400px;
+        width: 100%;
+    }
+    #backButton{
+        float: left;
+        color: white;
+        width: 100px;
+    }
+    #stageExperimentButton {
+        float: right;
+        color: black;
+    }
+    #saveConfigButton,#importConfigButton{
+        color: white;
+        display: inline;
+        width: 200px;
+        text-align: center;
+
+    }
+    .sosa-centered-button-panel{
+        margin-left:auto;
+        margin-right: auto;
+        width: fit-content;
+
+    }
+    .sosa-slider-group {
+        max-width:100%;
+        min-height: 15vh;
+        margin: 8px;
+        padding:8px;
+        box-shadow: 0 0 1px 1px;
+    }
+
+    .sosa-slider-group .label{
+        display: inline;
+        max-width:70%;
+        margin-left:auto;
+        margin-right: auto;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .label-child{
+        float:left;
+        width:21%;
+        margin:1em;
+    }
+
+        .checkbox-child{
+            float:center;
+
+
+        }
+        .sosa-checkbox-group{
+             box-shadow: 0 0 1px 1px;
+            min-height: 10vh;
+             max-width: 25%;
+            padding-top: 8px;
+            margin-left: 8px;
+        }
+    #labelAligner{
+        min-height: 10vh;
+
+    }
+
+    .sosa-widget-selectable{
+        float:left;
+        min-width: 90%;
+    }
+
+    .sosa-widget-selectable:hover{
+        background-color: #007aff;
+        color: white;
+
+    }
+
+    .sosa-slider-group h5{
+        margin-bottom: 16px;
+    }
+    .sosa-wide-panel{
+        width: 100%;
+        height: fit-content;
+    }
+    .btn{
+        color: white;
+    }
+    #sosa-configuration-panel{
+        border: 1px solid;
+        border-color: #007aff;
+        clear: both;
+        margin: 12px;
+        min-height:fit-content;
+        min-width: 45vw;
+        padding-bottom:1em;
+
+    }
+
+    #exConfigPickerWidgetBg{
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 150vh;
+        top: 0;
+        left: 0;
+        z-index: 30;
+        background-color: rgba(0,0,0,0.4);
+    }
+    #exConfigPickerWidget {
+        position: absolute;
+        top: 25%;
+        left: 40%;
+        width: 550px;
+        min-height: 450px ;
+        max-height: 600px;
+        z-index: 31;
+        background-color: #852897;
+
+        border-radius: 10px;
+
+    }
+    #exConfigPickerWidgetList{
+        min-height: 250px;
+        max-height: 450px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+
+        margin: 12px;
+
+    }
+    #exConfigPickerWidgetCloseButton{
+        font-size: 28px;
+        position: absolute;
+        top: 2px;
+        right: 2px;
+
+        margin:16px;
+    }
+
+    #exConfigPickerWidgetCloseButton:hover{
+        color: red;
+        cursor: pointer;
+    }
+    #exConfigPickerWidgetButtonPanel{
+        margin: 8px;
+    }
+    #exConfigPickerWidgetBackButton{
+        width: 150px;
+        margin: 4px;
+    }
+    #exConfigPickerWidgetRefreshButton{
+        width: 150px;
+        margin: 4px;
+    }
+    #exConfigPickerWidgetHeader{
+        margin-top: 4px;
+        margin-bottom:2px;
+        font-size: 32px;
+        text-align: center;
+        color: white;
+
+        cursor: default !important;
+    }
+    #exConfigPickerWidgetSearchBar{
+        margin-left: auto;
+        margin-right: auto;
+        width: 75%;
+
+        text-align: center;
+
+        margin-bottom: 16px;
+    }
+    .exConfigPickerWidgetAlertPanel{
+        padding-top: 12px;
+        position: absolute;
+        bottom: 0;
+
+        width: 100%;
+
+        margin-left: auto;
+        margin-right: auto;
+
+
+    }
+
+    #displayConfigName{
+        padding-left:8px;
+        padding-right: 8px;
+    }
+    #exConfigPickerWidgetSubHeader{
+        margin-top:0;
+        margin-bottom: 4px;
+        font-size: 16px;
+        text-align: center;
+        color: white;
+
+        cursor: default !important;
+    }
+
+        .input--range {
+        position:relative;
+        margin-top:1.75em;
+    }
+
+    .input--range:after {
+        content: attr(data-value) "";
+        position:absolute;
+        top:-2em; left:0; right:0;
+        text-align:center;
+    }
+
+     .input--range .initial-value:after {
+        content: attr(data-value) "";
+        position:absolute;
+        top:-2em; left:0; right:0;
+        text-align:center;
+    }
+    li{
+        display:inline;
+    }
+
+    .close-button{
+        font-size: 15px;
+        margin:8px;
+        float:right;
+    }
+
+    .close-button:hover{
+        color: red;
+        cursor: pointer;
+        display: inline;
+    }
+    .widgetDiv{
+
+    }
+
+
+
+
+
+
+
+    </style>
+{% endblock %}
+
+
+<!--Fix bug where user could bypass login screen-->
+{% block content %}
+{% if user.is_authenticated %}
+
+    <title>{% block title %}Experiment Configuration{% endblock title %}</title>
+            <span id="data" data-user={{ user.id }} data-ex={{ exId }}/>
+             <script type="text/javascript">
+             //Set User id
+                window.USER_ID = {{ user.id }};
+                //Set EX_ID, experiment id
+                let EX_ID= $('#data').attr('data-ex');
+
+                if(EX_ID < 39){
+                    alert('Invalid Experiment Id In URL!');
+
+                }
+
+                EX_ID = EX_ID.substring(0,39);
+                console.log(EX_ID);
+                //For some reason a random '/' keeps appearing in this id
+
+            </script>
+
+            <script type = "text/javascript" src = {% static "js/ex_staging.js" %} ></script>
+
+
+                 <div id="previewPane">
+                     <div id="previewRenderArea"></div>
+                 </div>
+            <div id="stimOrderPanel">
+                <div id="stimlistPanel" class="sosa-list-view-panel">
+                    <center>
+                        <h4>Stims</h4>
+                    </center>
+                    <ul id="stimlist" class=" sosa-config-list list-group">
+                        <!--li class="list-group-item">Test</li-->
+                    </ul>
+                </div>
+                <div id="orderlistPanel" class="sosa-list-view-panel">
+                    <center>
+                        <h4>Orders</h4>
+                    </center>
+                    <ul  id="orderlist" class="list-group sosa-config-list">
+                        <!--li class="list-group-item">Test</li-->
+                    </ul>
+                </div>
+            </div>
+            <script type="text/javascript" src={% static "js/exPreviewWidget.js" %}></script>
+            <div id="sosa-configuration-panel">
+                <!--This is just a bunch of sosa-slider-groups -->
+                <div class="sosa-slider-group">
+                    <center>
+                        <h5><b>Board Tint</b></h5>
+                    </center>
+                      <label for="boardTintOpacity"> Tint Opacity
+                        <input type="range" id="boardTintOpacity" name="q4-range" onchange="updateBoardTintOpacity()" class="input input--range js-input-range custom-range" value="0" min="0" max="100" step="1">
+                      </label> <br/>
+                      <label for="boardTintR"> Red Tint
+                        <input type="range" id="boardTintR" name="q4-range" onchange="updateBoardTintRGB()" class="input input--range js-input-range custom-range " value="0" min="0" max="255" step="1">
+                      </label>
+                      <label for="boardTintG"> Green Tint
+                        <input type="range" id="boardTintG" name="q4-range" onchange="updateBoardTintRGB()" class="input input--range js-input-range custom-range " value="0" min="0" max="255" step="1">
+                      </label>
+                       <label for="boardTintB"> Blue Tint
+                        <input type="range" id="boardTintB" name="q4-range" onchange="updateBoardTintRGB()" class="input input--range js-input-range custom-range" value="0" min="0" max="255" step="1">
+                      </label>
+                        <br/>
+                </div>
+                <div class="sosa-radio-group">
+                    <label class="radio-inline"><input type="radio" name="gridSize" value="0" checked>No Grid</label>
+                    <label class="radio-inline"><input type="radio" name="gridSize" value="1" >6X6 Grid</label>
+                    <label class="radio-inline"><input type="radio" name="gridSize" value="2" >12x12 Grid</label>
+                    <label class="radio-inline"><input type="radio" name="gridSize" value="3" >24X24 Grid</label>
+                </div>
+                <center>
+                    <div class="sosa-checkbox-group">
+                                <label class="checkbox-child" for="shouldHidePreview">Hide Preview
+                                    <input id="shouldHidePreview" type="checkbox">
+                                </label>
+                                <label class="checkbox-child"   for="shouldHideBgImage">Hide Background
+                                    <input id="shouldHideBgImage" type="checkbox">
+                                </label>
+                                <label class="checkbox-child"  for="shouldHideStimLabels">Hide Stim Labels
+                                    <input id="shouldHideStimLabels" type="checkbox">
+                                </label>
+                    </div>
+                </center>
+
+
+            <!--Be sure to use a button panel for any buttons in this sub-grouping-->
+                  <center>
+                        <p>Currently working on configuration: <br/>
+                            <span id="displayConfigName">Untitled</span>
+                        </p>
+                  </center>
+                <div class="sosa-centered-button-panel">
+                    <a id='saveConfigButton' onclick="handleUserSavesConfig()" class="btn btn-primary home-button">Save Configuration</a>
+                    <a id='importConfigButton' onclick="toggleConfigPicker()" class="btn btn-primary home-button">Import Configuration</a>
+                </div>
+            </div>
+          <div class="sosa-wide-panel">
+            <a id='backButton' onclick="handleBackButton()" class="btn btn-dark home-button">Back</a>
+            <a id='stageExperimentButton' onclick="beginExperimentStaging()" class="btn btn-warning home-button">Stage Experiment</a>
+          </div>
+            <div id="exConfigPickerWidgetBg" >
+                <div id="exConfigPickerWidget">
+                    <h1 id="exConfigPickerWidgetCloseButton" onclick="toggleConfigPicker()">X</h1>
+                    <h1 id="exConfigPickerWidgetHeader">Experiment Configurations</h1>
+                    <h4 id="exConfigPickerWidgetSubHeader">Select a config...</h4>
+                    <ul id="exConfigPickerWidgetList" class="list-group">
+                    </ul>
+                    <div id="exConfigPickerWidgetSearchPanel">
+                        <input id="exConfigPickerWidgetSearchBar" type="text" placeholder="Type here to search!" oninput="handleUserSearch(getEventTarget(event))" class="form-control">
+                    </div>
+                    <div id="exConfigPickerWidgetButtonPanel">
+                         <button id="exConfigPickerWidgetRefreshButton" onclick="handleUserRequestsRefresh()" class="btn btn-success">Refresh</button>
+                    </div>
+                    <div class="exConfigPickerWidgetAlertPanel" id="exConfigPickerWidgetAlertPanel">
+                        <div class="alert alert-info " role="alert">Loading experiment configurations...</div>
+                    </div>
+                </div>
+            </div>
+            <div id="alertPanel">
+                <div class="alert alert-info">Loading...</div>
+            </div>
+
+
+
+{#    <a href="/view_results" class="btn btn-primary home-button">View Results</a>#}
+
+    {% else %}
+    <img src="{% static 'images/Psychology_image.png' %}" class="img-fluid" alt="SOSA Logo" height="200" width="200" id="logo"/>
+    <h1>SOSA</h1>
+    <p>Simultaneous Object and Subjective Assessment</p>
+    <hr>
+    <p> You are not logged in!</p>
+{%  endif %}
+{%  endblock content %}

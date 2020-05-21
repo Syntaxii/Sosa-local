@@ -1,0 +1,46 @@
+{% extends '_subject_base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/home.css" %}">
+    <style>
+    /*
+        Override this style to fix the background notfitting scene.
+     */
+        .mx-auto{
+            width: 50%  !important;
+        }
+    </style>
+{% endblock %}
+
+<title>{% block title %}SOSA Preview{% endblock title %}</title>
+
+{% block content %}
+    <!--Toggle lib -->
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <!-- load exId and userId -->
+    <span id="data" data-prompt-time = {{ promptTime }} data-inv-id="{{ invId }}"></span>
+    <script type="text/javascript">
+        let data_pres_prompt_invId = $('#data').attr('data-inv-id');
+        // window.onload = alert("Your name: " + sessionStorage.getItem("testTakerName") + 
+        //     "\nExperiment name: " + sessionStorage.getItem("experimentName"));
+    </script>
+    <!--Render area for the experiment-->
+
+    <script type="text/javascript" src="{% static 'js/exPreviewWidget.js' %}"></script>
+     <script type="text/javascript" src="{% static 'js/exPresPreview.js' %}"></script>
+    <div class="text-center">
+        <h1>Experiment Preview</h1>
+        <div id="previewPane">
+            <div id="previewRenderArea"></div>
+        </div>
+        <p>Welcome to SOSA, please click the button below to begin your experiment.</p>
+        <button id='exStimViewButton' onclick="toggleStims()" class="btn btn-primary">View Stims</button>
+        <button id='exStartButton' onclick="handleUserStartsExperiment()" class="btn btn-primary">Start Experiment</button>
+    </div>
+
+    <script src="{% static "js/exPresPrompt.js" %}"></script>
+    <div id="alertPanel"></div>
+
+{% endblock %}

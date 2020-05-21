@@ -1,0 +1,114 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/create_experiment.css" %}">
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+
+    <div class="row justify-content-center">
+        <table id="stims" align="center">
+            <tr class="header">
+                <th>Stimulus Sets</th>
+            </tr>
+            {% for stimset in stimsets %}
+                {% if stimset.user.id == user.id %}
+                    <tr>
+                        <td><button class="btn" onclick="loadStimset({{ stimset.stimsetid }})">{{ stimset.stimsetname }}</button></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+        <table id="boards" align="center">
+            <tr class="header">
+                <th>Boards</th>
+            </tr>
+            <!--FILL IN THE TABLE WITH RESULTS FROM THE DATABASE-->
+            {% for board in boards %}
+                {% if board.user_id == user.id %}
+                    <tr>
+                        <td><button class="btn" onclick="loadBoard({{ board.boardid }})">{{ board.boardname }}</button></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            <!--End fill in the table with results from the database-->
+        </table>
+    </div>
+    <hr>
+    <div class="row justify-content-center">
+        <table id="stimTable">
+            <tr class="header">
+                <th>Stimuli</th>
+            </tr>
+        </table>
+        <div id="ThreeJSBoard"></div>
+        <script src="{% static "js/createBoard.js" %}"></script>
+    </div>
+        <input type="button" class="btn btn-primary"
+               value="Send Experiment"
+               id="sendExperiment"
+               onclick="urlStimBoardSend()">
+
+{#        This needs to be dynamic values based on what's selected#}
+
+    <input type="hidden" id="BoardRvalue">
+    <input type="hidden" id="BoardGvalue">
+    <input type="hidden" id="BoardBvalue">
+    <input type="hidden" id="BackgroundRvalue">
+    <input type="hidden" id="BackgroundGvalue">
+    <input type="hidden" id="BackgroundBvalue">
+
+    <script>
+
+
+    var boardID_2 ;
+    var stimID_2 ;
+
+    function urlStimBoardSend(){
+        console.log(boardID_2 + " " + stimID_2);
+        if(boardID_2 != null && stimID_2 != null){
+           var url= "{% url 'experiment' stimsetid=123 boardid=456%}".replace('123',stimID_2).replace('456',boardID_2);
+           location.href= url;
+        }
+
+    }
+
+
+        function loadBoard(boardID) {
+            boardID_2 = boardID;
+            // Set board colors to hidden inputs
+            {% for board in boards %}
+                if (boardID === {{ board.boardid }}) {
+                    $("#BoardRvalue").val({{ board.boardr }});
+                    $("#BoardGvalue").val({{ board.boardg }});
+                    $("#BoardBvalue").val({{ board.boardb }});
+                    $("#BackgroundRvalue").val({{ board.boardbackgroundr }});
+                    $("#BackgroundGvalue").val({{ board.boardbackgroundg }});
+                    $("#BackgroundBvalue").val({{ board.boardbackgroundb }});
+                }
+            {% endfor %}
+            // Change board colors based on hidden inputs
+            setBoardRGB();
+            setBackgroundRGB();
+        }
+
+        function loadStimset(stimsetID) {
+            stimID_2 = stimsetID;
+            // Reset the table
+            $("#stimTable").html("<tr class='header'><th>Stimuli</th></tr>");
+            // Add stims from stimset to table
+            {% for stimulus in stimuli %}
+                if (stimsetID == {{ stimulus.stimsetid_id }}) {
+                    $("#stimTable").append("<tr><td><button class='btn' style='background-color:inherit;' onclick='stimToBoard(this, {{ stimulus.stimr }}, {{ stimulus.stimg }}, {{ stimulus.stimb }}, \"{{ stimulus.stimshape }}\")'>{{ stimulus.stimlabel }}</button></td></tr>");
+                }
+            {% endfor %}
+        }
+    </script>
+    {% endif %}
+{% endblock %}

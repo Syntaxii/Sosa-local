@@ -1,0 +1,14 @@
+{
+    "python.pythonPath": "C:\\Users\\jef100\\.virtualenvs\\2019fall-19f_sosa-0svT4cIW\\Scripts\\python.exe",
+    "sqltools.connections": [
+        {
+            "database": "pfhrbilf",
+            "dialect": "PostgreSQL",
+            "name": "Remote Postgres",
+            "password": "4WPZZvJlW9HPQRisaurxr0SCuhcBhpr9",
+            "port": 5432,
+            "server": "salt.db.elephantsql.com",
+            "username": "pfhrbilf"
+        }
+    ]
+}
